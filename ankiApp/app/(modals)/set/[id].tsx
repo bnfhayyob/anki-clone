@@ -4,7 +4,7 @@ import React from 'react'
 const Page = () => {
   return (
     <View>
-      <Text>My Sets</Text>
+      <Text>Page</Text>
     </View>
   )
 }

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const API_URL = process.env.PUBLIC_API_URL;
+const API_URL = process.env.PUBLIC_API_URL || 'http://localhost:3000';
 export const USER_STORAGE_KEY = 'userid';
 
 //
@@ -39,8 +39,21 @@ export const createSet = async (set: Partial<Set>) => {
 };
 
 export const getSets = async (): Promise<Set[]> => {
-  const response = await fetch(`${API_URL}/sets`);
-  return response.json();
+  try {
+    console.log('Fetching sets from:', `${API_URL}/sets`);
+    const response = await fetch(`${API_URL}/sets`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('API Response:', data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching sets:', error);
+    throw error;
+  }
 };
 
 export const deleteSet = async (setid: string) => {

@@ -1,6 +1,6 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
-import {Tabs} from 'expo-router'
+import {Link, Tabs} from 'expo-router'
 import Colors from '@/constants/Colors'
 import {Ionicons} from '@expo/vector-icons'
 
@@ -18,7 +18,13 @@ const Layout = () => {
         <Tabs.Screen name='sets' options={{
             title:'My Sets',
             tabBarIcon: ({size,color}) => <Ionicons name='home-outline' size={size} color={color}/>,
-
+            headerRight: ()=>(
+                <Link href="/" asChild>
+                    <TouchableOpacity style={{marginRight:10}} >
+                        <Ionicons name='add-outline' size={26} color={'#fff'}/>
+                    </TouchableOpacity>
+                </Link>
+            )
         }}/>
         <Tabs.Screen name='search' options={{
             title:'Search',

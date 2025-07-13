@@ -8,16 +8,15 @@ const Page = () => {
     const [hasId, setHasId] = useState(false)
 
     useEffect(()=>{
-        const loadId = async () => {
-            const id = await AsyncStorage.getItem(USER_STORAGE_KEY)
-            if(!id){
-              const randomUserid = Math.random().toString(36)
-              console.log(`randomUserid : ${randomUserid}`)
-              await AsyncStorage.setItem(USER_STORAGE_KEY,randomUserid)
-            }
-          setHasId(true)
+      const loadId = async () => {
+        const id = await AsyncStorage.getItem(USER_STORAGE_KEY)
+        if(!id){
+          const randomUserid = Math.random().toString(36)
+          await AsyncStorage.setItem(USER_STORAGE_KEY,randomUserid)
         }
-        loadId()
+        setHasId(true)
+      }
+    loadId()
     },[])
 
     if(hasId){

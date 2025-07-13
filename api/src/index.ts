@@ -3,14 +3,16 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import { connectDB } from './database';
 import { Sets, Cards, Learnings, UserSets } from './models/index'; // Remove .ts extension
-
+const cors = require('cors');
 dotenv.config();
 
 const { PORT } = process.env;
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
-
+app.use(cors({
+  origin: 'http://localhost:8081'  // Your frontend URL
+}));
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
