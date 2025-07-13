@@ -6,7 +6,7 @@ const setsSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   private: { type: Boolean, default: true },
-  creator: { type: String, required: true },
+  creator: { type: String, required: true , default:"anonymous"},
   image: {
     data:  Schema.Types.Buffer,
     contentType: String,
