@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity, RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Set, getSets } from "@/data/api";
 import { defaultStyleSheet } from "@/constants/Styles";
 import { FlatList } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
 
 const Page = () => {
   const [sets, setSets] = useState<Set[]>([]);
@@ -46,8 +47,8 @@ const Page = () => {
         <TouchableOpacity style={styles.setRow}>
           <View style={{ flexDirection: "row" ,gap:10}}>
             <View style={{ flex: 1 }}>
-              <Text>{item.title}</Text>
-              <Text>{item.cards}</Text>
+              <Text style={styles.rowTitle}>{item.title}</Text>
+              <Text style={{color: Colors.darkGrey}}>{item.cards} Cards</Text>
             </View>
             <Ionicons name="chevron-forward-outline" size={24} color={"#ccc"} />
           </View>
@@ -58,14 +59,22 @@ const Page = () => {
 
   return (
     <View style={defaultStyleSheet.container}>
-      <FlatList data={sets} renderItem={renderSetRow} />
+      <FlatList data={sets} renderItem={renderSetRow} 
+      refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={loadSets}/>}/>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
     setRow:{
-        padding:16
+        padding:16,
+        backgroundColor:"#fff",
+        borderBottomWidth:1,
+        borderBottomColor:Colors.lightGrey
+    },
+    rowTitle:{
+        fontSize:16,
+        fontWeight:500
     }
 });
 
