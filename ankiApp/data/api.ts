@@ -9,14 +9,14 @@ export interface Set {
   cards: number;
   description: string;
   creator: string;
-  id: string;
+  _id: string;
   title: string;
   image?: any;
 }
 
 export interface Card {
   answer: string;
-  id: string;
+  _id: string;
   question: string;
   image?: any;
   set: string;
@@ -48,7 +48,6 @@ export const getSets = async (): Promise<Set[]> => {
     }
     
     const data = await response.json();
-    console.log('API Response:', data);
     return data;
   } catch (error) {
     console.error('Error fetching sets:', error);

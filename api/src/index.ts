@@ -11,7 +11,11 @@ const { PORT } = process.env;
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(cors({
-  origin: true  // Your frontend URL
+  origin: [
+    'exp://192.168.1.15:8081',
+    'http://192.168.1.15:8081',
+    'http://localhost:3000' // Keep this for web testing
+  ]
 }));
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -111,10 +115,11 @@ app.get('/init', async (req, res) => {
   }
 });
 
+
 // Create a new set
 app.post('/sets', upload.single('image'), async (req, res) => {
   try {
-    const { title, description, private: isPrivate, creator, image } = req.body;
+    const { title, description, private: isPrivate, creator } = req.body;
     
     const setData: any = {
       title,
@@ -124,14 +129,7 @@ app.post('/sets', upload.single('image'), async (req, res) => {
     };
 
     // Handle image upload
-    if (image) {
-      const imageBuffer = base64ToBuffer(image);
-      setData.image = {
-        data: imageBuffer,
-        contentType: 'image/png',
-        filename: `${Date.now()}-image.png`
-      };
-    } else if (req.file) {
+    if (req.file) {
       setData.image = {
         data: req.file.buffer,
         contentType: req.file.mimetype,
@@ -160,7 +158,10 @@ app.get('/sets', async (req, res) => {
     const setsWithImages = sets.map((set: any) => ({
       ...set,
       image: set.image && set.image.data && set.image.contentType 
-        ? bufferToBase64(set.image.data, set.image.contentType) 
+        ? {
+            ...set.image,
+            url: bufferToBase64(set.image.data, set.image.contentType)
+          }
         : null
     }));
 
@@ -183,7 +184,10 @@ app.get('/sets/:id', async (req, res) => {
 
     // Convert image buffer to base64 for response
     if (set.image && set.image.data && set.image.contentType) {
-      (set as any).image = bufferToBase64(set.image.data, set.image.contentType);
+      (set as any).image = {
+        ...set.image,
+        url: bufferToBase64(set.image.data, set.image.contentType)
+      };
     }
 
     return res.json(set);

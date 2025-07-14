@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity, RefreshControl } from "react-native";
+import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity, RefreshControl, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Set, getSets } from "@/data/api";
 import { defaultStyleSheet } from "@/constants/Styles";
@@ -21,14 +21,9 @@ const Page = () => {
     try {
       setIsRefreshing(true);
       setError(null);
-
-      console.log("Loading sets...");
       const data = await getSets();
-
-      console.log("Sets loaded:", data);
       setSets(data);
     } catch (err) {
-      console.error("Failed to load sets:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsRefreshing(false);
@@ -37,15 +32,13 @@ const Page = () => {
 
   const renderSetRow: ListRenderItem<Set> = ({ item }) => {
     return (
-      <Link
-        href={{
-          pathname: "/(modals)/set/[id]",
-          params: { id: item.id },
-        }}
-        asChild
-      >
+      <Link href={`/(modals)/set/${item._id}`} asChild>
         <TouchableOpacity style={styles.setRow}>
           <View style={{ flexDirection: "row" ,gap:10}}>
+            {item.image && (
+              <Image source={{uri:item.image.url}} style={{width:50, height:50, borderRadius:8}} />
+            )}
+            {!item.image && <View style={{width:50, height:50}}/>}
             <View style={{ flex: 1 }}>
               <Text style={styles.rowTitle}>{item.title}</Text>
               <Text style={{color: Colors.darkGrey}}>{item.cards} Cards</Text>
